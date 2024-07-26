@@ -8,7 +8,7 @@
     "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -31,7 +31,8 @@
       "inversedBy": "transactions"
     },
     "status": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": true
     }
   }
 }

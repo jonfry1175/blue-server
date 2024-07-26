@@ -82,6 +82,12 @@
       "relation": "manyToOne",
       "target": "api::category.category",
       "inversedBy": "users_permissions_users"
+    },
+    "phone_number": {
+      "type": "string",
+      "required": true,
+      "minLength": 1,
+      "maxLength": 17
     }
   }
 }
