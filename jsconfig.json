@@ -1,5 +1,4 @@
-
-{
+// test push{
   "compilerOptions": {
     "moduleResolution": "nodenext",
     "target": "ES2021",
