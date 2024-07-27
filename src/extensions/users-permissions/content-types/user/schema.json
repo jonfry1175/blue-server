@@ -71,12 +71,6 @@
       "target": "api::gender.gender",
       "inversedBy": "users_permissions_users"
     },
-    "transactions": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::transaction.transaction",
-      "mappedBy": "user"
-    },
     "category": {
       "type": "relation",
       "relation": "manyToOne",
@@ -88,6 +82,18 @@
       "required": true,
       "minLength": 1,
       "maxLength": 17
+    },
+    "transactions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::transaction.transaction",
+      "mappedBy": "teacher_id"
+    },
+    "transaction_responses": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::transaction-response.transaction-response",
+      "mappedBy": "teacher_id"
     }
   }
 }

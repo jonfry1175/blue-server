@@ -728,11 +728,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'api::gender.gender'
     >;
-    transactions: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToMany',
-      'api::transaction.transaction'
-    >;
     category: Attribute.Relation<
       'plugin::users-permissions.user',
       'manyToOne',
@@ -744,6 +739,16 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
         minLength: 1;
         maxLength: 17;
       }>;
+    transactions: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::transaction.transaction'
+    >;
+    transaction_responses: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::transaction-response.transaction-response'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -821,15 +826,15 @@ export interface ApiCategoryCategory extends Schema.CollectionType {
   };
   attributes: {
     name: Attribute.String;
-    transactions: Attribute.Relation<
-      'api::category.category',
-      'oneToMany',
-      'api::transaction.transaction'
-    >;
     users_permissions_users: Attribute.Relation<
       'api::category.category',
       'oneToMany',
       'plugin::users-permissions.user'
+    >;
+    transactions: Attribute.Relation<
+      'api::category.category',
+      'oneToMany',
+      'api::transaction.transaction'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -857,7 +862,7 @@ export interface ApiGenderGender extends Schema.CollectionType {
     description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     name: Attribute.String;
@@ -869,7 +874,6 @@ export interface ApiGenderGender extends Schema.CollectionType {
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'api::gender.gender',
       'oneToOne',
@@ -878,6 +882,41 @@ export interface ApiGenderGender extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::gender.gender',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiStatusStatus extends Schema.CollectionType {
+  collectionName: 'statuses';
+  info: {
+    singularName: 'status';
+    pluralName: 'statuses';
+    displayName: 'Status';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    name: Attribute.String;
+    transactions: Attribute.Relation<
+      'api::status.status',
+      'oneToMany',
+      'api::transaction.transaction'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::status.status',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::status.status',
       'oneToOne',
       'admin::user'
     > &
@@ -898,18 +937,36 @@ export interface ApiTransactionTransaction extends Schema.CollectionType {
   };
   attributes: {
     price: Attribute.BigInteger;
-    Description: Attribute.Text;
-    category: Attribute.Relation<
+    description: Attribute.Text &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        minLength: 1;
+      }>;
+    category_id: Attribute.Relation<
       'api::transaction.transaction',
       'manyToOne',
       'api::category.category'
     >;
-    user: Attribute.Relation<
+    student_id: Attribute.Relation<
       'api::transaction.transaction',
       'manyToOne',
       'plugin::users-permissions.user'
     >;
-    status: Attribute.Boolean & Attribute.DefaultTo<true>;
+    teacher_id: Attribute.Relation<
+      'api::transaction.transaction',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    transaction_responses: Attribute.Relation<
+      'api::transaction.transaction',
+      'oneToMany',
+      'api::transaction-response.transaction-response'
+    >;
+    status_id: Attribute.Relation<
+      'api::transaction.transaction',
+      'manyToOne',
+      'api::status.status'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -920,6 +977,51 @@ export interface ApiTransactionTransaction extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::transaction.transaction',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiTransactionResponseTransactionResponse
+  extends Schema.CollectionType {
+  collectionName: 'transaction_responses';
+  info: {
+    singularName: 'transaction-response';
+    pluralName: 'transaction-responses';
+    displayName: 'TransactionResponse';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    transaction_id: Attribute.Relation<
+      'api::transaction-response.transaction-response',
+      'manyToOne',
+      'api::transaction.transaction'
+    >;
+    teacher_id: Attribute.Relation<
+      'api::transaction-response.transaction-response',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    transactions: Attribute.Relation<
+      'api::transaction-response.transaction-response',
+      'oneToMany',
+      'api::transaction.transaction'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::transaction-response.transaction-response',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::transaction-response.transaction-response',
       'oneToOne',
       'admin::user'
     > &
@@ -947,7 +1049,9 @@ declare module '@strapi/types' {
       'plugin::i18n.locale': PluginI18NLocale;
       'api::category.category': ApiCategoryCategory;
       'api::gender.gender': ApiGenderGender;
+      'api::status.status': ApiStatusStatus;
       'api::transaction.transaction': ApiTransactionTransaction;
+      'api::transaction-response.transaction-response': ApiTransactionResponseTransactionResponse;
     }
   }
 }

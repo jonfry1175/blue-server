@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "categories",
+  "collectionName": "statuses",
   "info": {
-    "singularName": "category",
-    "pluralName": "categories",
-    "displayName": "Categories",
+    "singularName": "status",
+    "pluralName": "statuses",
+    "displayName": "Status",
     "description": ""
   },
   "options": {
@@ -15,17 +15,11 @@
     "name": {
       "type": "string"
     },
-    "users_permissions_users": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "plugin::users-permissions.user",
-      "mappedBy": "category"
-    },
     "transactions": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::transaction.transaction",
-      "mappedBy": "category_id"
+      "mappedBy": "status_id"
     }
   }
 }
