@@ -15,24 +15,40 @@
     "price": {
       "type": "biginteger"
     },
-    "Description": {
-      "type": "text"
+    "description": {
+      "type": "text",
+      "required": true,
+      "minLength": 1
     },
-    "category": {
+    "category_id": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::category.category",
       "inversedBy": "transactions"
     },
-    "user": {
+    "student_id": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "transactions"
     },
-    "status": {
-      "type": "boolean",
-      "default": true
+    "teacher_id": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "transactions"
+    },
+    "status_id": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::status.status",
+      "inversedBy": "transactions"
+    },
+    "interested_teacher_id": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "teacher_id"
     }
   }
 }

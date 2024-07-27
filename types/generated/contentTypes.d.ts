@@ -362,6 +362,177 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
   };
 }
 
+export interface ApiCategoryCategory extends Schema.CollectionType {
+  collectionName: 'categories';
+  info: {
+    singularName: 'category';
+    pluralName: 'categories';
+    displayName: 'Categories';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    name: Attribute.String;
+    users_permissions_users: Attribute.Relation<
+      'api::category.category',
+      'oneToMany',
+      'plugin::users-permissions.user'
+    >;
+    transactions: Attribute.Relation<
+      'api::category.category',
+      'oneToMany',
+      'api::transaction.transaction'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::category.category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::category.category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiGenderGender extends Schema.CollectionType {
+  collectionName: 'genders';
+  info: {
+    singularName: 'gender';
+    pluralName: 'genders';
+    displayName: 'Genders';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    name: Attribute.String;
+    avatar: Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    users_permissions_users: Attribute.Relation<
+      'api::gender.gender',
+      'oneToMany',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::gender.gender',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::gender.gender',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiStatusStatus extends Schema.CollectionType {
+  collectionName: 'statuses';
+  info: {
+    singularName: 'status';
+    pluralName: 'statuses';
+    displayName: 'Status';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    name: Attribute.String;
+    transactions: Attribute.Relation<
+      'api::status.status',
+      'oneToMany',
+      'api::transaction.transaction'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::status.status',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::status.status',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiTransactionTransaction extends Schema.CollectionType {
+  collectionName: 'transactions';
+  info: {
+    singularName: 'transaction';
+    pluralName: 'transactions';
+    displayName: 'Transactions';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    price: Attribute.BigInteger;
+    description: Attribute.Text &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        minLength: 1;
+      }>;
+    category_id: Attribute.Relation<
+      'api::transaction.transaction',
+      'manyToOne',
+      'api::category.category'
+    >;
+    student_id: Attribute.Relation<
+      'api::transaction.transaction',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    teacher_id: Attribute.Relation<
+      'api::transaction.transaction',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    status_id: Attribute.Relation<
+      'api::transaction.transaction',
+      'manyToOne',
+      'api::status.status'
+    >;
+    interested_teacher_id: Attribute.Relation<
+      'api::transaction.transaction',
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::transaction.transaction',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::transaction.transaction',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface PluginUploadFile extends Schema.CollectionType {
   collectionName: 'files';
   info: {
@@ -728,11 +899,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'api::gender.gender'
     >;
-    transactions: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToMany',
-      'api::transaction.transaction'
-    >;
     category: Attribute.Relation<
       'plugin::users-permissions.user',
       'manyToOne',
@@ -744,6 +910,16 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
         minLength: 1;
         maxLength: 17;
       }>;
+    transactions: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::transaction.transaction'
+    >;
+    teacher_id: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'manyToMany',
+      'api::transaction.transaction'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -808,125 +984,6 @@ export interface PluginI18NLocale extends Schema.CollectionType {
   };
 }
 
-export interface ApiCategoryCategory extends Schema.CollectionType {
-  collectionName: 'categories';
-  info: {
-    singularName: 'category';
-    pluralName: 'categories';
-    displayName: 'Categories';
-    description: '';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    name: Attribute.String;
-    transactions: Attribute.Relation<
-      'api::category.category',
-      'oneToMany',
-      'api::transaction.transaction'
-    >;
-    users_permissions_users: Attribute.Relation<
-      'api::category.category',
-      'oneToMany',
-      'plugin::users-permissions.user'
-    >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::category.category',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::category.category',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiGenderGender extends Schema.CollectionType {
-  collectionName: 'genders';
-  info: {
-    singularName: 'gender';
-    pluralName: 'genders';
-    displayName: 'Genders';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    name: Attribute.String;
-    avatar: Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
-    users_permissions_users: Attribute.Relation<
-      'api::gender.gender',
-      'oneToMany',
-      'plugin::users-permissions.user'
-    >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::gender.gender',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::gender.gender',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiTransactionTransaction extends Schema.CollectionType {
-  collectionName: 'transactions';
-  info: {
-    singularName: 'transaction';
-    pluralName: 'transactions';
-    displayName: 'Transactions';
-    description: '';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    price: Attribute.BigInteger;
-    Description: Attribute.Text;
-    category: Attribute.Relation<
-      'api::transaction.transaction',
-      'manyToOne',
-      'api::category.category'
-    >;
-    user: Attribute.Relation<
-      'api::transaction.transaction',
-      'manyToOne',
-      'plugin::users-permissions.user'
-    >;
-    status: Attribute.Boolean & Attribute.DefaultTo<true>;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::transaction.transaction',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::transaction.transaction',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -937,6 +994,10 @@ declare module '@strapi/types' {
       'admin::api-token-permission': AdminApiTokenPermission;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
+      'api::category.category': ApiCategoryCategory;
+      'api::gender.gender': ApiGenderGender;
+      'api::status.status': ApiStatusStatus;
+      'api::transaction.transaction': ApiTransactionTransaction;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::content-releases.release': PluginContentReleasesRelease;
@@ -945,9 +1006,6 @@ declare module '@strapi/types' {
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'plugin::i18n.locale': PluginI18NLocale;
-      'api::category.category': ApiCategoryCategory;
-      'api::gender.gender': ApiGenderGender;
-      'api::transaction.transaction': ApiTransactionTransaction;
     }
   }
 }
